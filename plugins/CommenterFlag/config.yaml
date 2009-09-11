@@ -1,0 +1,16 @@
+name: Comment Flagger
+id: CommentFlag
+key: CommentFlag
+description: A plugin which allows readers to flag comments that may need to be removed
+
+object_types:
+    commentflag: $CommentFlag::MT::App::Comment::CommentFlag
+
+callbacks:
+    'MT::Comment::post_remove': $CommentFlag::CommentFlag::Plugin::_comment_post_remove
+    'MT::Comment::post_remove_all': $CommentFlag::CommentFlag::Plugin::_comment_post_remove_all
+
+tags:
+    function:
+        CommentFlagLink: $CommentFlag::$CommentFlag::Plugin::_hdlr_comment_flag_link
+
