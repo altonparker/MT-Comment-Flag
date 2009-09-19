@@ -2,7 +2,7 @@ name: Comment Flagger
 id: CommentFlag
 key: CommentFlag
 description: A plugin which allows readers to flag comments that may need to be removed
-schema_version: 2
+schema_version: 0.02
 
 object_types:
     commentflag: CommentFlag::DataObject
