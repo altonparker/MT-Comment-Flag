@@ -1,7 +1,7 @@
 package MT::App::CommentFlag;
 
 use strict;
-use base (MT::App);
+use base qw(MT::App);
 
 sub init {
 	my $app = shift;
@@ -11,6 +11,7 @@ sub init {
 	$app->add_methods(
 		show_dialog => \&show_dialog
 	);
+	$app->{default_mode} = 'show_dialog';
 
 	$app;
 }
