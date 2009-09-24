@@ -1,7 +1,8 @@
 package CommentFlag::DataObject;
 
 use strict;
-use base qw(MT::Object);
+use MT::Tagl
+use base qw(MT::Object MT::Taggable);
 
 __PACKAGE__->install_properties({
 	column_defs => {

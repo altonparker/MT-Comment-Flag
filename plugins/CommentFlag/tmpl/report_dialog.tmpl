@@ -1,0 +1,34 @@
+<html>
+	<head>
+	
+	</head>
+	<body>
+		<mt:if name="must_be_logged_in" eq="1">
+		<mtapp:statusmsg id="must_be_logged_in" class="error">
+			Only registered users are allowed to report comments.
+		</mtapp:statusmsg>
+		
+		<mt:else>
+			<form action="" method="post">
+				<mt:if name="user_is_anonymous">
+					<input type="text" name="name" id="name"/>
+					<label for="name">Name:</label>
+					<input type="text" name="email" id="email"/>
+					<label for="email">Email:</label>
+				<mt:else>
+					<input type="hidden" name="name" value=""/>
+					<input type="hidden" name="email" value=""/>
+				</mt:if>
+				<select name="reason" id="reasonSelect">
+					<mt:loop name="reasons">
+					
+					</mt:loop>
+				</select>
+				<label for="reasonSelect">Reason:</label>
+				<textarea rows="30" cols="30" name="comments" id="comments"></textarea>
+				<label for="comments">Remarks:</label>
+				<input type="submit"/><input type="reset"/>
+			</form>
+		</mt:if>
+	</body>
+</html>
