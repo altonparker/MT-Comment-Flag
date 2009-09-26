@@ -1,33 +1,48 @@
 <html>
 	<head>
-	
+	<style>
+		label 
+		{
+			vertical-align: top; 
+			width: 150px; 
+			display:block; 
+			float:left;
+		}
+	</style>
 	</head>
 	<body>
-		<mt:if name="must_be_logged_in" eq="1">
-		<mtapp:statusmsg id="must_be_logged_in" class="error">
+		<mt:if name="must_be_logged_in_and_not_logged_in" eq="1">
 			Only registered users are allowed to report comments.
-		</mtapp:statusmsg>
-		
 		<mt:else>
 			<form action="" method="post">
 				<mt:if name="user_is_anonymous">
-					<input type="text" name="name" id="name"/>
-					<label for="name">Name:</label>
-					<input type="text" name="email" id="email"/>
-					<label for="email">Email:</label>
+					<div>
+						<label for="name">Name:</label>
+						<input type="text" name="name" id="name"/>
+					</div>
+					<div>
+						<label for="email">Email:</label>
+						<input type="text" name="email" id="email"/>
+					</div>
 				<mt:else>
-					<input type="hidden" name="name" value=""/>
-					<input type="hidden" name="email" value=""/>
+					<input type="hidden" name="name" value="<mt:var name="registered_name"/>"/>
+					<input type="hidden" name="email" value="<mt:var name="registered_email"/>"/>
 				</mt:if>
-				<select name="reason" id="reasonSelect">
-					<mt:loop name="reasons">
-					
-					</mt:loop>
-				</select>
+				<div>
 				<label for="reasonSelect">Reason:</label>
-				<textarea rows="20" cols="50" name="comments" id="comments"></textarea>
-				<label for="comments">Remarks:</label>
-				<input type="submit"/><input type="reset"/>
+					<select name="reason" id="reasonSelect">
+						<mt:loop name="reasons">
+						<option value="<mt:var name="reason"/>"><mt:var name="reason"/></option>
+						</mt:loop>
+					</select>
+				</div>
+				<div>
+					<label for="comments">Remarks:</label>
+					<textarea rows="20" cols="50" name="comments" id="comments"></textarea>
+				</div>
+				<div>
+					<label for="submit">&nbsp;</label><input id="submit" type="submit"/><input type="reset"/>
+				</div>
 			</form>
 		</mt:if>
 	</body>

@@ -23,17 +23,26 @@ sub _hdlr_comment_flag_includes
 	my $static_path = $cfg->StaticWebPath() . '/plugins/CommentFlag/';
 }
 
+sub _hdlr_comment_flag_url
+{
+	my ($ctx, $args) = @_;
+	my $cfg = MT::ConfigMgr->instance();
+	my $cgi_path = $cfg->CGIPath();
+	
+	return "$cgi_path/plugins/CommentFlag/mt-commentflag.cgi";
+}
+
 sub _hdlr_comment_flag_link
 {
 	my ($ctx, $args) = @_;
 	
 	my $comment = $ctx->stash('comment') or return '';
-	
-	my $cfg = MT::ConfigMgr->instance();
-	my $cgi_path = $cfg->CGIPath();
 	my $id = $comment->id();
+	my $url = _hdlr_comment_flag_url($ctx, $args);
+	
+	
 	my $link = <<LINK;
-<a rel="prettyPhoto" href="$cgi_path/plugins/CommentFlag/mt-commentflag.cgi?comment_id=$id">Report</a>
+<a rel="prettyPhoto" href="$url?comment_id=$id">Report</a>
 LINK
 
 	return $link;

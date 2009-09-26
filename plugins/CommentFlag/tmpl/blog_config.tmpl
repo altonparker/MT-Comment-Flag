@@ -1,0 +1,20 @@
+<mtapp:setting
+  id="comment_flag_tags"
+  label="Reasons for reporting"
+  hint="These are the general reasons for reporting a comment. Examples include 'sexual content,' 'libelous comment', 'copyright infringement', etc."
+  show_hint="1">
+	<input type="text" value="<mt:var name="comment_flag_tags"/>" name="comment_flag_tags" id="comment_flag_tags_text"/>
+</mtapp:setting>
+
+<mtapp:setting
+  id="comment_flag_require_authentication"
+  label="Require users to register first before reporting."
+  hint="If enabled, this will only allow registered users to report comments. If disabled, comment reporting can easily be abused by trolls."
+  show_hint="1">
+	<input type="radio" name="comment_flag_require_authentication" id="comment_flag_require_authentication_yes" 
+	value="1" <mt:if name="comment_flag_require_authentication" eq="1">checked="checked"</mt:if> />
+	<label for="comment_flag_require_authentication_yes">Yes</label>
+	<input type="radio" name="comment_flag_require_authentication" id="comment_flag_require_authentication_no" 
+	value="0" <mt:if name="comment_flag_require_authentication" eq="0">checked="checked"</mt:if> />
+	<label for="comment_flag_require_authentication_no">No</label>
+</mtapp:setting>
