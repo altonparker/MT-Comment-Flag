@@ -8,13 +8,18 @@
 			display:block; 
 			float:left;
 		}
+		div {
+			clear:both;
+		}
 	</style>
 	</head>
 	<body>
 		<mt:if name="must_be_logged_in_and_not_logged_in" eq="1">
 			Only registered users are allowed to report comments.
 		<mt:else>
-			<form action="" method="post">
+			<form action="<mt:CommentFlagUrl/>" method="post">
+				<input type="hidden" name="__mode" value="file_report"/>
+				<input type="hidden" name="comment_id" value="<mt:var name="comment_id"/>"/>
 				<mt:if name="user_is_anonymous">
 					<div>
 						<label for="name">Name:</label>
@@ -25,8 +30,7 @@
 						<input type="text" name="email" id="email"/>
 					</div>
 				<mt:else>
-					<input type="hidden" name="name" value="<mt:var name="registered_name"/>"/>
-					<input type="hidden" name="email" value="<mt:var name="registered_email"/>"/>
+					<input type="hidden" name="registered_id" value="<mt:var name="registered_id"/>"/>
 				</mt:if>
 				<div>
 				<label for="reasonSelect">Reason:</label>
@@ -38,7 +42,7 @@
 				</div>
 				<div>
 					<label for="comments">Remarks:</label>
-					<textarea rows="20" cols="50" name="comments" id="comments"></textarea>
+					<textarea rows="20" cols="50" name="remarks" id="comments"></textarea>
 				</div>
 				<div>
 					<label for="submit">&nbsp;</label><input id="submit" type="submit"/><input type="reset"/>

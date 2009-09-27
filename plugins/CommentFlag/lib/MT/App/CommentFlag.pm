@@ -9,8 +9,9 @@ sub init {
 	$app->{template_dir} = 'feeds';
 	$app->{is_admin}     = 1;
 	$app->add_methods(
-		show_dialog => \&show_dialog,
-		do_login       => \&do_login,
+		show_dialog 	=> \&show_dialog,
+		do_login       	=> \&do_login,
+		file_report	=> \&file_report
 		);
 	$app->{default_mode} = 'show_dialog';
 
@@ -50,6 +51,34 @@ sub init_request {
 sub file_report
 {
 	my $app = shift;
+	my $comment_id = $app->param('comment_id');
+	my $reason = $app->param('reason');
+	my $remarks = $app->param('remarks');
+	my $email = $app->param('email');
+	my $name = $app->param('name');
+	my $registered_id = $app->param('registered_id') || -1;
+
+	use MT::Tag;
+
+	my $tag = MT::Tag->load({name => $reason});
+	if (!$tag)
+	{
+		$tag = MT::Tag->new();
+		$tag->name($reason);
+		$tag->save();
+	}
+
+	use CommentFlag::DataObject;
+	my $flag = CommentFlag::DataObject->new();
+	$flag->comment_id($comment_id);
+	unless($registered_id > -1)
+	{
+		$flag->reporter_name($name);
+		$flag->reporter_email($email);
+	}
+	$flag->reporter_id($registered_id);
+	$flag->explanation($remarks);
+	$flag->save() or die ($flag->errstr);
 }
 
 sub show_dialog
@@ -79,11 +108,11 @@ sub show_dialog
 	$params->{reasons} = \@reasons;
 	$params->{must_be_logged_in} = $req_auth;
 	$params->{user_is_anonymous} = 0;
+	$params->{comment_id} = $comment_id;
 	
 	if (defined ($app->user))
 	{
-		$params->{registered_name} = $app->user->name;
-		$params->{registered_email} = $app->user->email;
+		$params->{registered_id} = $app->user->id;
 	}
 	
 	return $app->build_page($template, $params);

@@ -2,7 +2,7 @@ name: Comment Flagger
 id: CommentFlag
 key: CommentFlag
 description: A plugin which allows readers to flag comments that may need to be removed
-schema_version: 0.05
+schema_version: 0.06
 version: 0.75
 blog_config_template: blog_config.tmpl
 
@@ -15,7 +15,8 @@ callbacks:
 
 tags:
     function:
-        CommentFlagLink: $CommentFlag::$CommentFlag::Plugin::_hdlr_comment_flag_link
+        CommentFlagUrl: $CommentFlag::CommentFlag::Plugin::_hdlr_comment_flag_url
+        CommentFlagLink: $CommentFlag::CommentFlag::Plugin::_hdlr_comment_flag_link
 
 settings:
     comment_flag_require_authentication:

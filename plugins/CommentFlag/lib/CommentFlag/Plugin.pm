@@ -1,6 +1,6 @@
 package CommentFlag::Plugin;
 use strict;
-use MT::Comment::CommentFlag;
+use CommentFlag::DataObject;
 use MT::ConfigMgr;
 
 sub _comment_post_remove
@@ -29,7 +29,7 @@ sub _hdlr_comment_flag_url
 	my $cfg = MT::ConfigMgr->instance();
 	my $cgi_path = $cfg->CGIPath();
 	
-	return "$cgi_path/plugins/CommentFlag/mt-commentflag.cgi";
+	return "$cgi_path/plugins/CommentFlag/mt-comment-flag.cgi";
 }
 
 sub _hdlr_comment_flag_link
