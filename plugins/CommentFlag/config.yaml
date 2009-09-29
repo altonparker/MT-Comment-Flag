@@ -2,7 +2,7 @@ name: Comment Flagger
 id: CommentFlag
 key: CommentFlag
 description: A plugin which allows readers to flag comments that may need to be removed
-schema_version: 0.06
+schema_version: 0.07
 version: 0.75
 blog_config_template: blog_config.tmpl
 
@@ -25,3 +25,14 @@ settings:
     comment_flag_tags:
         scope: blog
         default: copyright infringement, libel, sexual content, other
+
+applications:
+    cms:
+        list_filters:
+            comment:
+                comment_flag: 
+                    label: "Flagged Comments"
+                    order: 300
+                    handler: $CommentFlag::CommentFlag::Plugin::_comment_flag_quick_filter
+
+

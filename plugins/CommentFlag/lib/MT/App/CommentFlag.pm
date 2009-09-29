@@ -37,7 +37,6 @@ sub do_login
 	        || ( MT::Auth::NEW_USER() == $result )
         || ( MT::Auth::SUCCESS() == $result ) )
 	{
-		#die("Blarg!");
 		$app->redirect('http://www.codemonkeyramblings.com/mt/plugins/CommentFlag/mt-comment-flag.cgi?blog_id=2')
 	}
 }
@@ -59,16 +58,39 @@ sub file_report
 	my $registered_id = $app->param('registered_id') || -1;
 
 	use MT::Tag;
+	use CommentFlag::DataObject;
+	
+	my $errors = {};
+	$errors->{no_comment_id} = 1 unless $comment_id > 0;
+	$errors->{no_reason} = 1 unless $reason ne ''; # ($reason ne '' ? 0 : 1);
+	$errors->{no_remarks} = 1 unless $remarks ne ''; #($remarks ne '' ? 0 : 1);
+	$errors->{no_email} = 1 unless ($email ne '' or $registered_id > 0); # ($email ne '' or $registered_id > 0 ? 0 : 1);
+	$errors->{no_name} = 1 unless ($name ne '' or $registered_id > 0); # ($name ne '' or $registered_id > 0 ? 0 : 1);
+	
+	if (CommentFlag::DataObject->exist({comment_id => $comment_id}))
+	{
+		$app->param('is_a_duplicate', 1);
+		return $app->show_dialog;
+	}
+	
+	my @keys = keys($#errors);
+	if ( ( $#keys+1 ) > 0 )
+	{
+		foreach (keys (%$errors) )
+		{
+			$app->param ($_, $errors->{$_});
+		}
+		return $app->show_dialog;
+	}
 
-	my $tag = MT::Tag->load({name => $reason});
+	my $tag = MT::Tag->exist({name => $reason});
 	if (!$tag)
 	{
 		$tag = MT::Tag->new();
 		$tag->name($reason);
 		$tag->save();
 	}
-
-	use CommentFlag::DataObject;
+	
 	my $flag = CommentFlag::DataObject->new();
 	$flag->comment_id($comment_id);
 	unless($registered_id > -1)
@@ -78,7 +100,12 @@ sub file_report
 	}
 	$flag->reporter_id($registered_id);
 	$flag->explanation($remarks);
+	$flag->add_tags($reason);
 	$flag->save() or die ($flag->errstr);
+	
+	$app->param('flag_successful', 1);
+	
+	return $app->show_dialog;
 }
 
 sub show_dialog
@@ -109,6 +136,14 @@ sub show_dialog
 	$params->{must_be_logged_in} = $req_auth;
 	$params->{user_is_anonymous} = 0;
 	$params->{comment_id} = $comment_id;
+	
+	foreach my $key ( keys(%{ $app->param })  )
+	{
+		if (($key =~ /^no[t]?/) or ($key =~ /^is/))
+		{
+			$params->{$key} = $app->param($key);
+		}
+	}
 	
 	if (defined ($app->user))
 	{

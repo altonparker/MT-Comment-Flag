@@ -7,9 +7,26 @@
 			width: 150px; 
 			display:block; 
 			float:left;
+			margin-right: 10px;
 		}
 		div {
 			clear:both;
+			margin-bottom: 10px;
+		}
+		
+		.error
+		{
+			background:red;
+		}
+		
+		.toperror
+		{
+			width:320px;
+			font-size:18px;
+			font-weight:bold;
+			margin-left:auto;
+			margin-right:auto;
+			padding: 5px 20px 5px 20px;
 		}
 	</style>
 	</head>
@@ -17,31 +34,40 @@
 		<mt:if name="must_be_logged_in_and_not_logged_in" eq="1">
 			Only registered users are allowed to report comments.
 		<mt:else>
+			<mt:if name="is_a_duplicate">
+				<div class="error toperror">
+					This comment has already been flagged!
+				</div>
+			</mt:if>
 			<form action="<mt:CommentFlagUrl/>" method="post">
 				<input type="hidden" name="__mode" value="file_report"/>
 				<input type="hidden" name="comment_id" value="<mt:var name="comment_id"/>"/>
 				<mt:if name="user_is_anonymous">
 					<div>
-						<label for="name">Name:</label>
+						<label <mt:if name="no_name">class="error"</mt:if> for="name">Name:</label>
 						<input type="text" name="name" id="name"/>
+						
 					</div>
 					<div>
-						<label for="email">Email:</label>
+						<label <mt:if name="no_email">class="error"</mt:if> for="email">Email:</label>
 						<input type="text" name="email" id="email"/>
+						
 					</div>
 				<mt:else>
 					<input type="hidden" name="registered_id" value="<mt:var name="registered_id"/>"/>
 				</mt:if>
 				<div>
-				<label for="reasonSelect">Reason:</label>
+				<label <mt:if name="no_reason">class="error"</mt:if> for="reasonSelect">Reason:</label>
 					<select name="reason" id="reasonSelect">
+						<option value=""></option>
 						<mt:loop name="reasons">
 						<option value="<mt:var name="reason"/>"><mt:var name="reason"/></option>
 						</mt:loop>
 					</select>
+					
 				</div>
 				<div>
-					<label for="comments">Remarks:</label>
+					<label <mt:if name="no_remarks">class="error"</mt:if> for="comments">Remarks:</label>
 					<textarea rows="20" cols="50" name="remarks" id="comments"></textarea>
 				</div>
 				<div>

@@ -14,8 +14,17 @@ sub _comment_post_remove_all
 {
 	my ($cb) = @_;
 	
-	
 }
+
+sub _comment_flag_quick_filter
+{
+	my ( $terms, $args ) = @_;
+	my $join = CommentFlag::DataObject->join_on('comment_id', {});
+	
+	$args->{join} = $join;
+	$args->{unique} = 1;
+}
+
 
 sub _hdlr_comment_flag_includes
 {
