@@ -11,11 +11,25 @@ sub init {
 	$app->add_methods(
 		show_dialog 	=> \&show_dialog,
 		do_login       	=> \&do_login,
-		file_report	=> \&file_report
+		file_report	=> \&file_report,
+		login_form	=> \&login_form
 		);
 	$app->{default_mode} = 'show_dialog';
 
 	$app;
+}
+
+sub login_form
+{
+	my $app = shift;
+	my $plugin = MT->component('CommentFlag');
+	my $template = $plugin->load_tmpl('login.tmpl');
+	die("No blog id!!!") if !defined $app->param('blog_id');
+	die("No comment id") if !defined $app->param('comment_id');
+	
+	my $params = { blog_id => $app->param('blog_id'), comment_id => $app->param('comment_id') };
+	
+	return $app->build_page($template, $params);
 }
 
 sub do_login
@@ -37,14 +51,23 @@ sub do_login
 	        || ( MT::Auth::NEW_USER() == $result )
         || ( MT::Auth::SUCCESS() == $result ) )
 	{
-		$app->redirect('http://www.codemonkeyramblings.com/mt/plugins/CommentFlag/mt-comment-flag.cgi?blog_id=2')
+		use MT::ConfigMgr;
+		my $cfg = MT::ConfigMgr->instance();
+		my $cgi_path = $cfg->CGIPath();
+	
+		my $comment_id = $app->param('comment_id');
+		my $blog_id = $app->param('blog_id');
+		my $url = "$cgi_path/plugins/CommentFlag/mt-comment-flag.cgi?blog_id=$blog_id&comment_id=$comment_id";
+		$app->log({message => ' Ma uri: '. $app->uri()});
+		die("NO USER!") if !defined $app->user;
+		$app->make_commenter_session($app->user);
+		$app->redirect($url);
 	}
 }
 
 sub init_request {
 	my $app = shift;
 	$app->SUPER::init_request(@_);
-	$app->{requires_login} = 1;
 }
 
 sub file_report
@@ -73,7 +96,7 @@ sub file_report
 		return $app->show_dialog;
 	}
 	
-	my @keys = keys($#errors);
+	my @keys = keys(%$errors);
 	if ( ( $#keys+1 ) > 0 )
 	{
 		foreach (keys (%$errors) )
@@ -116,38 +139,47 @@ sub show_dialog
 	my $comment_id = $app->param('comment_id');
 	
 	my $blog_id = $app->param('blog_id');
+	
 	my $req_auth = $plugin->get_config_value('comment_flag_require_authentication', "blog:$blog_id");
-	
-	$app->{requires_login} = $req_auth;
-	
-	my $tagstr = $plugin->get_config_value('comment_flag_tags', "blog:$blog_id");
-	my @tagnames = split(/,[\s*]/, $tagstr);
-	
-	my @reasons;
-	
-	foreach my $tag (@tagnames)
-	{
-		my $reason = { reason => $tag };
-		push (@reasons, $reason);
-	}
+	my ($obj, $user) = $app->get_commenter_session();
 	
 	my $params = {};
-	$params->{reasons} = \@reasons;
-	$params->{must_be_logged_in} = $req_auth;
-	$params->{user_is_anonymous} = 0;
-	$params->{comment_id} = $comment_id;
 	
-	foreach my $key ( keys(%{ $app->param })  )
+	if (!defined($obj) and !defined($user) and $req_auth)
 	{
-		if (($key =~ /^no[t]?/) or ($key =~ /^is/))
-		{
-			$params->{$key} = $app->param($key);
-		}
+		$params->{must_be_logged_in_and_not_logged_in} = 1;
 	}
-	
-	if (defined ($app->user))
+	else
 	{
-		$params->{registered_id} = $app->user->id;
+		my $tagstr = $plugin->get_config_value('comment_flag_tags', "blog:$blog_id");
+		my @tagnames = split(/,[\s*]/, $tagstr);
+
+		my @reasons;
+
+		foreach my $tag (@tagnames)
+		{
+			my $reason = { reason => $tag };
+			push (@reasons, $reason);
+		}
+
+
+		$params->{reasons} = \@reasons;
+		$params->{must_be_logged_in} = $req_auth;
+		$params->{user_is_anonymous} = 0;
+		$params->{comment_id} = $comment_id;
+
+		foreach my $key ( keys(%{ $app->param })  )
+		{
+			if (($key =~ /^no[t]?/) or ($key =~ /^is/))
+			{
+				$params->{$key} = $app->param($key);
+			}
+		}
+
+		if (defined ($app->user))
+		{
+			$params->{registered_id} = $app->user->id;
+		}
 	}
 	
 	return $app->build_page($template, $params);

@@ -27,13 +27,13 @@ function init() {
 TC.attachLoadEvent(init);
 /* ]]> */
 </script>
-<mt:var name="script_url" value="http://www.codemonkeyramblings.com/mt/plugins/CommentFlag/mt-comment-flag.cgi"/>
-<form method="post" action="<mt:var name="script_url">">
+<form method="post" action="<mt:CommentFlagUrl/>">
 <mt:loop name="query_params">
 <input type="hidden" name="<mt:var name="name" escape="html">" value="<mt:var name="value" escape="html">" />
 </mt:loop>
-<input type="hidden" name="__mode" value="do_login"/>
-
+	<input type="hidden" name="__mode" value="do_login"/>
+	<input type="hidden" name="blog_id" value="<mt:var name="blog_id"/>"/>
+	<input type="hidden" name="comment_id" value="<mt:var name="comment_id"/>"/>
 
 	<mtapp:setting
 		id="username"

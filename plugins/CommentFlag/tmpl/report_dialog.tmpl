@@ -1,34 +1,24 @@
 <html>
 	<head>
-	<style>
-		label 
-		{
-			vertical-align: top; 
-			width: 150px; 
-			display:block; 
-			float:left;
-			margin-right: 10px;
-		}
-		div {
-			clear:both;
-			margin-bottom: 10px;
-		}
-		
-		.error
-		{
-			background:red;
-		}
-		
-		.toperror
-		{
-			width:320px;
-			font-size:18px;
-			font-weight:bold;
-			margin-left:auto;
-			margin-right:auto;
-			padding: 5px 20px 5px 20px;
-		}
-	</style>
+	<script type="text/javascript" src="<mt:StaticWebPath/>plugins/CommentFlag/js/jquery-1.3.2.min.js"></script>
+	<script type="text/javascript" src="<mt:StaticWebPath/>plugins/CommentFlag/js/jquery.form.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			changeEvent = function() {
+				if ( $(this).val() != '' &&  $(this).siblings('label').hasClass('error'))
+					$(this).siblings('label').removeClass('error');
+				else if ($(this).val() == '')
+					$(this).siblings('label').addClass('error');
+			};
+		<mt:if name="user_is_anonymous">
+			$("#name").change(changeEvent).keydown(changeEvent);
+			$("#email").change(changeEvent).keydown(changeEvent);
+		</mt:if>
+			$("#reasonSelect").change(changeEvent);
+			$("#remarks").keyup(changeEvent);
+		});
+	</script>
+	<link rel="stylesheet" type="text/css" href="<mt:StaticWebPath/>plugins/CommentFlag/css/report_dialog.css"/>
 	</head>
 	<body>
 		<mt:if name="must_be_logged_in_and_not_logged_in" eq="1">
@@ -68,7 +58,7 @@
 				</div>
 				<div>
 					<label <mt:if name="no_remarks">class="error"</mt:if> for="comments">Remarks:</label>
-					<textarea rows="20" cols="50" name="remarks" id="comments"></textarea>
+					<textarea rows="15" cols="50" name="remarks" id="remarks"></textarea>
 				</div>
 				<div>
 					<label for="submit">&nbsp;</label><input id="submit" type="submit"/><input type="reset"/>

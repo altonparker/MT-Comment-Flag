@@ -10,13 +10,21 @@ object_types:
     commentflag: CommentFlag::DataObject
 
 callbacks:
-    'MT::Comment::post_remove': $CommentFlag::CommentFlag::Plugin::_comment_post_remove
-    'MT::Comment::post_remove_all': $CommentFlag::CommentFlag::Plugin::_comment_post_remove_all
+    MT::Comment::post_remove: $CommentFlag::CommentFlag::Plugin::_comment_post_remove
+
+list_actions:
+    comment:
+        unflag_comment:
+            label: Remove Flag
+            order: 201
+            code:  $CommentFlag::CommentFlag::Plugin::_comment_unflag_page_action
+            permission: edit_all_posts
 
 tags:
     function:
         CommentFlagUrl: $CommentFlag::CommentFlag::Plugin::_hdlr_comment_flag_url
         CommentFlagLink: $CommentFlag::CommentFlag::Plugin::_hdlr_comment_flag_link
+        CommentFlagIncludes: $CommentFlag::CommentFlag::Plugin::_hdlr_comment_flag_includes
 
 settings:
     comment_flag_require_authentication:
@@ -34,5 +42,3 @@ applications:
                     label: "Flagged Comments"
                     order: 300
                     handler: $CommentFlag::CommentFlag::Plugin::_comment_flag_quick_filter
-
-

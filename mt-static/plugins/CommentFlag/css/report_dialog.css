@@ -1,0 +1,27 @@
+label 
+{
+	vertical-align: top; 
+	width: 150px; 
+	display:block; 
+	float:left;
+	margin-right: 10px;
+}
+div {
+	clear:both;
+	margin-bottom: 10px;
+}
+
+.error
+{
+	background:red;
+}
+
+.toperror
+{
+	width:320px;
+	font-size:18px;
+	font-weight:bold;
+	margin-left:auto;
+	margin-right:auto;
+	padding: 5px 20px 5px 20px;
+}
