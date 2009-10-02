@@ -11,6 +11,7 @@ object_types:
 
 callbacks:
     MT::Comment::post_remove: $CommentFlag::CommentFlag::Plugin::_comment_post_remove
+    MT::App::CMS::template_source.edit_comment: $CommentFlag::CommentFlag::Plugin::_edit_comment_callback
 
 list_actions:
     comment:

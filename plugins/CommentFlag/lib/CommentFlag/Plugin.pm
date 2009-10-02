@@ -86,6 +86,29 @@ LINK
 	return $link;
 }
 
+sub _edit_comment_callback
+{
+	my ($cb, $app, $src) = @_;
+
+	my $flag = $app->model('commentflag')->load({ comment_id => $app->param('id') });
+
+	return '' if !$flag;
+
+	my @tags = $flag->tags;
+	my $label = $tags[0];
+
+	my $tmpl = <<TMPL;
+    <mtapp:setting
+        id="flagstuff"
+        label="<__trans phrase="Why It Was Reported">"
+        content_class="field-content-text"
+        hint="<__trans phrase="Why this comment was flagged.">"
+        show_hint="0">
+        $label
+    </mtapp:setting>
+TMPL
+	$$src =~ s/(<mtapp:setting[\s\n]*id="ip")/$tmpl\n$1/;
+}
 
 
 
