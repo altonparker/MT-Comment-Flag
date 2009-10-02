@@ -86,4 +86,24 @@ LINK
 	return $link;
 }
 
+
+
+
+sub my_upgrade_function {
+    my ($obj) = @_;
+}
+
+sub my_upgrade_condition {
+    my ($obj) = @_;
+    return 0;
+}
+
+sub my_upgrade_sql {
+    return (
+      "UPDATE mt_entry SET some_property='xyz' WHERE title='Foo'",
+      "UPDATE mt_entry SET some_property='123' WHERE title='Bar'",
+    );
+}
+
+
 1;

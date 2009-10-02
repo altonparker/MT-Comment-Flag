@@ -11,8 +11,8 @@
 					$(this).siblings('label').addClass('error');
 			};
 		<mt:if name="user_is_anonymous">
-			$("#name").change(changeEvent).keydown(changeEvent);
-			$("#email").change(changeEvent).keydown(changeEvent);
+			$("#name").keyup(changeEvent);
+			$("#email").keyup(changeEvent);
 		</mt:if>
 			$("#reasonSelect").change(changeEvent);
 			$("#remarks").keyup(changeEvent);
@@ -32,6 +32,7 @@
 			<form action="<mt:CommentFlagUrl/>" method="post">
 				<input type="hidden" name="__mode" value="file_report"/>
 				<input type="hidden" name="comment_id" value="<mt:var name="comment_id"/>"/>
+				<input type="hidden" name="blog_id" value="<mt:var name="blog_id"/>"/>
 				<mt:if name="user_is_anonymous">
 					<div>
 						<label <mt:if name="no_name">class="error"</mt:if> for="name">Name:</label>

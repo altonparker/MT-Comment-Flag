@@ -95,7 +95,6 @@ sub file_report
 		$app->param('is_a_duplicate', 1);
 		return $app->show_dialog;
 	}
-	
 	my @keys = keys(%$errors);
 	if ( ( $#keys+1 ) > 0 )
 	{
@@ -165,8 +164,9 @@ sub show_dialog
 
 		$params->{reasons} = \@reasons;
 		$params->{must_be_logged_in} = $req_auth;
-		$params->{user_is_anonymous} = 0;
+		$params->{user_is_anonymous} = (defined $user ? 0 : 1);
 		$params->{comment_id} = $comment_id;
+		$params->{blog_id} = $blog_id;
 
 		foreach my $key ( keys(%{ $app->param })  )
 		{

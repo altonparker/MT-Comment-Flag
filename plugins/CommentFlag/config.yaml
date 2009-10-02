@@ -2,7 +2,7 @@ name: Comment Flagger
 id: CommentFlag
 key: CommentFlag
 description: A plugin which allows readers to flag comments that may need to be removed
-schema_version: 0.07
+schema_version: 2
 version: 0.75
 blog_config_template: blog_config.tmpl
 
@@ -42,3 +42,13 @@ applications:
                     label: "Flagged Comments"
                     order: 300
                     handler: $CommentFlag::CommentFlag::Plugin::_comment_flag_quick_filter
+upgrade_functions:
+    my_function:
+        version_limit: 1
+        priority: 1
+        updater:
+            type: commentflag
+            label: "Doing something to all entries."
+            condition: $CommentFlag::CommentFlag::Plugin::my_upgrade_condition
+            code: $CommentFlag::CommentFlag::Plugin::my_upgrade_function
+            sql: $CommentFlag::CommentFlag::Plugin::my_upgrade_sql
