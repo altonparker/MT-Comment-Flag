@@ -58,8 +58,6 @@ sub do_login
 		my $comment_id = $app->param('comment_id');
 		my $blog_id = $app->param('blog_id');
 		my $url = "$cgi_path/plugins/CommentFlag/mt-comment-flag.cgi?blog_id=$blog_id&comment_id=$comment_id";
-		$app->log({message => ' Ma uri: '. $app->uri()});
-		die("NO USER!") if !defined $app->user;
 		$app->make_commenter_session($app->user);
 		$app->redirect($url);
 	}
