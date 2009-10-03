@@ -86,6 +86,25 @@ LINK
 	return $link;
 }
 
+sub _remove_flag_mode
+{
+	my $app = shift;
+	my $comment_id = $app->param('comment_id');
+	my $blog_id = $app->param('blog_id') || 0;
+
+	CommentFlag::DataObject->remove({ comment_id => $comment_id });
+
+	$app->redirect(
+		$app->uri(
+			mode => 'list_comment',
+			args => {
+				blog_id => $blog_id,
+				filter_key => 'comment_flag'
+			}
+		)
+	);
+}
+
 sub _edit_comment_callback
 {
 	my ($cb, $app, $src) = @_;
@@ -96,6 +115,14 @@ sub _edit_comment_callback
 
 	my @tags = $flag->tags;
 	my $label = $tags[0];
+	my $comment_id = $app->param('id');
+	my $remove_uri = $app->uri(
+		mode => 'remove_comment_flag',
+		args => {
+			blog_id => $app->param('blog_id') || 0,
+			comment_id => $comment_id
+		}
+	);
 
 	my $tmpl = <<TMPL;
     <mtapp:setting
@@ -104,7 +131,7 @@ sub _edit_comment_callback
         content_class="field-content-text"
         hint="<__trans phrase="Why this comment was flagged.">"
         show_hint="0">
-        $label
+        $label &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="$remove_uri">Unflag</a>
     </mtapp:setting>
 TMPL
 	$$src =~ s/(<mtapp:setting[\s\n]*id="ip")/$tmpl\n$1/;

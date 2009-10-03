@@ -37,6 +37,8 @@ settings:
 
 applications:
     cms:
+        methods:
+            remove_comment_flag: $CommentFlag::CommentFlag::Plugin::_remove_flag_mode
         list_filters:
             comment:
                 comment_flag: 
