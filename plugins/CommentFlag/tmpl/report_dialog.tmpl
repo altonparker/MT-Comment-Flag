@@ -22,13 +22,17 @@
 	</head>
 	<body>
 		<mt:if name="must_be_logged_in_and_not_logged_in" eq="1">
-			Only registered users are allowed to report comments.
+			<div class="error toperror">
+				Only registered users are allowed to report comments.
+			</div>
+		<mt:else name="is_a_duplicate">
+			<div class="error toperror">
+				This comment has already been flagged!
+				<script type="text/javascript">
+					top.location.hash = "#close-pp";
+				</script>
+			</div>
 		<mt:else>
-			<mt:if name="is_a_duplicate">
-				<div class="error toperror">
-					This comment has already been flagged!
-				</div>
-			</mt:if>
 			<form action="<mt:CommentFlagUrl/>" method="post">
 				<input type="hidden" name="__mode" value="file_report"/>
 				<input type="hidden" name="comment_id" value="<mt:var name="comment_id"/>"/>

@@ -88,11 +88,6 @@ sub file_report
 	$errors->{no_email} = 1 unless ($email ne '' or $registered_id > 0); # ($email ne '' or $registered_id > 0 ? 0 : 1);
 	$errors->{no_name} = 1 unless ($name ne '' or $registered_id > 0); # ($name ne '' or $registered_id > 0 ? 0 : 1);
 	
-	if (CommentFlag::DataObject->exist({comment_id => $comment_id}))
-	{
-		$app->param('is_a_duplicate', 1);
-		return $app->show_dialog;
-	}
 	my @keys = keys(%$errors);
 	if ( ( $#keys+1 ) > 0 )
 	{
@@ -145,6 +140,10 @@ sub show_dialog
 	if (!defined($obj) and !defined($user) and $req_auth)
 	{
 		$params->{must_be_logged_in_and_not_logged_in} = 1;
+	}
+	elsif (CommentFlag::DataObject->exist({comment_id => $comment_id}))
+	{
+		$params->{is_a_duplicate} = 1;
 	}
 	else
 	{

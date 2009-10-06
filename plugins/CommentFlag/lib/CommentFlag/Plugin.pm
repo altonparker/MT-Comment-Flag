@@ -60,6 +60,60 @@ sub _hdlr_comment_flag_includes
 	return $retVal;
 }
 
+sub _hdlr_comment_flag_javascript
+{
+	my $js = <<JAVASCRIPT;
+
+<script type="text/javascript">
+loginIntervalID = 0;
+
+function CheckPopupClose() {
+	var currentURL = new Array();
+	currentURL = window.location.href.split('#');
+
+	if ( window.location.hash == "#close-pp-delay" ) {
+		window.location.href = currentURL[0] + "#";
+		clearInterval( loginIntervalID );
+		setTimeout( '\$.prettyPhoto.close()', 6000);
+
+	} else if ( window.location.hash == "#close-pp" ) {
+		window.location.href = currentURL[0] + "#";
+		\$.prettyPhoto.close();
+		clearInterval( loginIntervalID );
+
+	} else if ( window.location.hash == "#open-reg" ) {
+		\$.prettyPhoto.close();
+		clearInterval( loginIntervalID );
+	}
+
+	return false;
+}
+
+\$(document).ready(function() {
+	\$("a[rel^='prettyPhoto']").mouseup(function () {
+		clearInterval( loginIntervalID );
+		var currentURL = new Array();
+		currentURL = window.location.href.split('#');
+		window.location.href = currentURL[0] + "#";
+		loginIntervalID = setInterval ("CheckPopupClose()", 500);
+	});
+	\$("a[rel^='prettyPhoto']").prettyPhoto(
+		{
+			showTitle: true,
+			callback: function()
+			{
+				clearInterval( loginIntervalID );
+				return false;
+			}
+		});
+});
+</script>
+
+JAVASCRIPT
+
+	return $js;
+}
+
 sub _hdlr_comment_flag_url
 {
 	my ($ctx, $args) = @_;
@@ -136,24 +190,5 @@ sub _edit_comment_callback
 TMPL
 	$$src =~ s/(<mtapp:setting[\s\n]*id="ip")/$tmpl\n$1/;
 }
-
-
-
-sub my_upgrade_function {
-    my ($obj) = @_;
-}
-
-sub my_upgrade_condition {
-    my ($obj) = @_;
-    return 0;
-}
-
-sub my_upgrade_sql {
-    return (
-      "UPDATE mt_entry SET some_property='xyz' WHERE title='Foo'",
-      "UPDATE mt_entry SET some_property='123' WHERE title='Bar'",
-    );
-}
-
 
 1;
