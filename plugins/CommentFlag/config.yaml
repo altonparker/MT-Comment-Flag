@@ -1,8 +1,10 @@
 name: Comment Flagger
 id: CommentFlag
 key: CommentFlag
-description: A plugin which allows readers to flag comments that may need to be removed
+description: A plugin which allows readers to flag comments that may need to be removed. Parts (prettyPhoto plugin) copyright Stephane Caron (http://www.no-margin-for-errors.com/)
 schema_version: 2
+author_link: http://www.codemonkeyramblings.com/
+author_name: Mike Thomsen
 version: 1.00
 blog_config_template: blog_config.tmpl
 
@@ -19,7 +21,7 @@ list_actions:
             label: Remove Flag
             order: 201
             code:  $CommentFlag::CommentFlag::Plugin::_comment_unflag_page_action
-            permission: edit_all_posts
+            permission: administer_blog
 
 tags:
     function:

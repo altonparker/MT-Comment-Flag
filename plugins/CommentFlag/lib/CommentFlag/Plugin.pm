@@ -145,6 +145,13 @@ sub _remove_flag_mode
 	my $app = shift;
 	my $comment_id = $app->param('comment_id');
 	my $blog_id = $app->param('blog_id') || 0;
+	
+	require MT::Permission;
+	my $perms = MT::Permission->load({blog_id => $blog_id, author_id => $app->user->id });
+	
+	unless ($perms->can_administer_blog) {
+		die("You don't have permission to unflag reported comments.");
+	}
 
 	CommentFlag::DataObject->remove({ comment_id => $comment_id });
 
