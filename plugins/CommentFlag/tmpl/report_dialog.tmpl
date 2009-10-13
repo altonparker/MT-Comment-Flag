@@ -22,14 +22,21 @@
 	</head>
 	<body>
 		<mt:if name="must_be_logged_in_and_not_logged_in" eq="1">
-			<div class="error toperror">
+			<div class="error topmsg">
 				Only registered users are allowed to report comments.
 			</div>
 		<mt:else name="is_a_duplicate">
-			<div class="error toperror">
+			<div class="error topmsg">
 				This comment has already been flagged!
 				<script type="text/javascript">
-					top.location.hash = "#close-pp";
+					top.location.hash = "#close-pp-delay";
+				</script>
+			</div>
+		<mt:else name="flag_successful">
+			<div class="success topmsg">
+				Thanks for reporting this comment!
+				<script type="text/javascript">
+					top.location.hash = "#close-pp-delay";
 				</script>
 			</div>
 		<mt:else>

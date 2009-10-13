@@ -13,10 +13,15 @@ div {
 
 .error
 {
-	background:red;
+	background:#FFFF99;
 }
 
-.toperror
+.success
+{
+	background:#CCFFCC
+}
+
+.topmsg
 {
 	width:320px;
 	font-size:18px;

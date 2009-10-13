@@ -74,7 +74,7 @@ function CheckPopupClose() {
 	if ( window.location.hash == "#close-pp-delay" ) {
 		window.location.href = currentURL[0] + "#";
 		clearInterval( loginIntervalID );
-		setTimeout( '\$.prettyPhoto.close()', 6000);
+		setTimeout( '\$.prettyPhoto.close()', 2500);
 
 	} else if ( window.location.hash == "#close-pp" ) {
 		window.location.href = currentURL[0] + "#";
@@ -97,7 +97,7 @@ function CheckPopupClose() {
 		window.location.href = currentURL[0] + "#";
 		loginIntervalID = setInterval ("CheckPopupClose()", 500);
 	});
-	\$("a[rel^='prettyPhoto']").prettyPhoto(
+	\$("a[rel^='reportComments']").prettyPhoto(
 		{
 			showTitle: true,
 			callback: function()
@@ -134,7 +134,7 @@ sub _hdlr_comment_flag_link
 	
 	
 	my $link = <<LINK;
-<a rel="prettyPhoto" href="$url?comment_id=$id&blog_id=$blog_id&iframe=true&height=400&width=700">Report</a>
+<a rel="reportComments" href="$url?comment_id=$id&blog_id=$blog_id&iframe=true&height=400&width=700">Report</a>
 LINK
 
 	return $link;

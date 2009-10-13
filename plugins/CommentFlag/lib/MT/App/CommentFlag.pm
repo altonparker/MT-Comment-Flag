@@ -135,6 +135,11 @@ sub show_dialog
 	my $req_auth = $plugin->get_config_value('comment_flag_require_authentication', "blog:$blog_id");
 	my ($obj, $user) = $app->get_commenter_session();
 	
+	if ( $app->param('flag_successful') )
+	{
+		return $app->build_page($template, { flag_successful => 1 });
+	}
+
 	my $params = {};
 	
 	if (!defined($obj) and !defined($user) and $req_auth)
